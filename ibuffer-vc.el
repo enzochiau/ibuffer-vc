@@ -120,15 +120,7 @@ If the file is not under version control, nil is returned instead."
     (when (ibuffer-vc--include-file-p file-name)
       (let ((backend (ibuffer-vc--deduce-backend file-name)))
         (when backend
-          (let* ((root-fn-name (intern (format "vc-%s-root" (downcase (symbol-name backend)))))
-                 (root-dir
-                  (cond
-                   ((fboundp root-fn-name) (funcall root-fn-name file-name)) ; git, svn, hg, bzr (at least)
-                   ((memq backend '(darcs DARCS)) (vc-darcs-find-root file-name))
-                   ((memq backend '(cvs CVS)) (vc-find-root file-name "CVS"))
-                   ((memq backend '(rcs RCS)) (or (vc-find-root file-name "RCS")
-                                                  (concat file-name ",v")))
-                   (t (error "ibuffer-vc: don't know how to find root for vc backend '%s' - please submit a bug report or patch" backend)))))
+          (let (root-dir (with-current-buffer buf (projectile-project-root)))
             (cons backend root-dir)))))))
 
 (define-ibuffer-filter vc-root
