@@ -207,11 +207,11 @@ If the file is not under version control, nil is returned instead."
     (let ((state (ibuffer-vc--state buffer-file-name)))
       (if state
           (symbol-name state)
-        "-"))))
+        ))))
 
 ;;;###autoload (autoload 'ibuffer-make-column-vc-status "ibuffer-vc")
 (define-ibuffer-column vc-status
-  (:name "VC status")
+  (:name "Status")
   (ibuffer-vc--status-string))
 
 ;;;###autoload (autoload 'ibuffer-make-column-vc-status-mini "ibuffer-vc")
