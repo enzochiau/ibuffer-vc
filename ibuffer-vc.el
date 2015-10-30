@@ -227,7 +227,8 @@ If the file is not under version control, nil is returned instead."
          ((eq 'needs-update state) "O")
          ((memq state '(conflict needs-merge unlocked-changes)) "!")
          ((eq 'ignored state) "I")
-         ((memq state '(() unregistered missing)) "?")))
+         ((memq state '(() unregistered missing)) "?")
+         (t "-")))
     " "))
 
 ;;;###autoload (autoload 'ibuffer-do-sort-by-vc-status "ibuffer-vc")
