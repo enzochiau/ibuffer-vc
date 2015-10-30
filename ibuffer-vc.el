@@ -98,7 +98,7 @@ This option can be used to exclude certain files from the grouping mechanism."
 ;;; Group and filter ibuffer entries by parent vc directory
 
 (defun ibuffer-vc--include-file-p (file)
-  "Return t iff FILE should be included in ibuffer-vc's filtering."
+  "Return t if FILE should be included in ibuffer-vc's filtering."
   (and file
        (or (null ibuffer-vc-skip-if-remote)
            (not (file-remote-p file)))
@@ -139,7 +139,7 @@ If the file is not under version control, nil is returned instead."
         msg)
 
     (when (file-exists-p file)
-      (setq msg (shell-command-to-string (format "cd %s; git status -s -- %s" file-dir file-name)))
+      (setq msg (shell-command-to-string (format "cd %s; git status -s --ignored -- %s" file-dir file-name)))
       (setq status (or (ignore-errors (substring msg 1 2)) " "))
       (cond
         ((string= status "?")
