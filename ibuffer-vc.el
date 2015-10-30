@@ -135,7 +135,7 @@ If the file is not under version control, nil is returned instead."
   "Reture FILE status."
   (let ((file-dir  (file-name-directory file))
         (file-name (file-name-nondirectory file))
-        (status "unknown")  ; unknown get status
+        (status 'unknow)  ; unknown get status
         msg)
 
     (when (file-exists-p file)
@@ -143,19 +143,19 @@ If the file is not under version control, nil is returned instead."
       (setq status (or (ignore-errors (substring msg 1 2)) " "))
       (cond
         ((string= status "?")
-         (setq status "untracked"))
+         (setq status 'untracked))
         ((string= status "!")
-         (setq status "ignored"))
+         (setq status 'ignored))
         ((string= status "M")
-         (setq status "edited"))
+         (setq status 'edited))
         ((string= status "A")
-         (setq status "added"))
+         (setq status 'added))
         ((string= status "D")
-         (setq status "deleted"))
+         (setq status 'deleted))
         ((string= status "U")
-         (setq status "unmerged"))
+         (setq status 'unmerged))
         ((string= status " ")
-         (setq status "up-to-date"))
+         (setq status 'up-to-date))
         )
       )
     status
