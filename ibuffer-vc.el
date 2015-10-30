@@ -131,6 +131,30 @@ If the file is not under version control, nil is returned instead."
                    (t (error "ibuffer-vc: don't know how to find root for vc backend '%s' - please submit a bug report or patch" backend)))))
             (cons backend root-dir)))))))
 
+(defun ibuffer-vc--git-status (file)
+  "Reture FILE status."
+  (let ((file-dir  (file-name-directory file))
+        (file-name (file-name-nondirectory file))
+        (status "unknown")  ; unknown get status
+        msg)
+
+    (when (file-exists-p file)
+      (setq msg (shell-command-to-string (format "cd %s; git status -s -- %s" file-dir file-name)))
+      (setq status (car (split-string msg)))
+      (cond
+        ((string= status "??")
+         (setq status "unregistered"))
+        ((string= status "M")
+         (setq status "edited"))
+        ((null status)
+         (setq status "up-to-date"))
+        )
+      )
+    status
+    )
+  )
+
+
 (define-ibuffer-filter vc-root
     "Toggle current view to buffers with vc root dir QUALIFIER."
   (:description "vc root dir"
@@ -165,7 +189,9 @@ If the file is not under version control, nil is returned instead."
 
 (defun ibuffer-vc--state (file)
   "Return the `vc-state' for FILE, or nil if unregistered."
-  (ignore-errors (vc-state file)))
+  (if (string= "Git" (ignore-errors (vc-responsible-backend file)))
+      (ibuffer-vc--git-status file)
+    (ignore-errors (vc-state file))))
 
 (defun ibuffer-vc--status-string ()
   "Return a short string to represent the current buffer's status."
